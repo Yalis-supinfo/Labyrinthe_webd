@@ -3,6 +3,42 @@
 <html>
 <head>
     <title>Labyrinthe</title>
+    <style>
+        body{
+            display: flex;
+            align-items: center;
+            flex-flow: column nowrap;
+        }
+
+        .boutons {
+            min-width: 250px;
+            display: grid;
+            grid-template:  "a a a a" 40px
+                            "b b c c" 40px
+                            "d d d d" 40px
+                            "e e e e" 40px
+                            "f f g g" 40px;
+        }
+
+        .haut{grid-area: a;}
+        
+        .bas{grid-area: d;}
+        
+        .gauche{grid-area: b;}
+        
+        .droite{grid-area: c;}
+        
+        .restart {grid-area: f;}
+
+        .automatique{grid-area:g;}
+        
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+    </style>
     <script language="JavaScript">
         m='m'; //représente un mur
         p='p'; //représente le personnage
@@ -20,6 +56,17 @@
                     [m,b,m,b,m,b,b,b,b,f],
                     [m,m,m,m,m,m,m,m,m,m]];
  
+        function restart(){
+            laby = [[m,m,m,m,m,m,m,m,m,m],
+                    [m,p,m,b,b,b,b,b,b,m],
+                    [m,b,m,b,m,m,m,b,m,m],
+                    [m,b,m,b,m,b,m,b,b,m],
+                    [m,b,b,b,m,b,m,m,b,m],
+                    [m,b,m,b,m,b,b,b,b,f],
+                    [m,m,m,m,m,m,m,m,m,m]];
+            afficheLaby()
+        }
+
         function findP(){
             for (let i=0; i<laby.length; i++) {
                 if (laby[i].includes(p)) {
@@ -30,15 +77,21 @@
 
         function haut(){
             [i, j] = findP()
-            if (laby[i-1][j]!=m){
+            if (laby[i-1][j]==f){
+                [laby[i-1][j], laby[i][j]] = [laby[i][j], b]
+                afficheLaby()
+                return
+            }else{
+                if (laby[i-1][j]==b){
                 [laby[i-1][j], laby[i][j]] = [laby[i][j], laby[i-1][j]]
+                }
             }
             afficheLaby()
         }
 
         function bas(){
             [i, j] = findP()
-            if (laby[i+1][j]!=m){
+            if (laby[i+1][j]==b){
                 [laby[i+1][j], laby[i][j]] = [laby[i][j], laby[i+1][j]]
             }
             afficheLaby()
@@ -46,7 +99,7 @@
 
         function gauche(){
             [i, j] = findP()
-            if (laby[i][j-1]!=m){
+            if (laby[i][j-1]==b){
                 [laby[i][j-1], laby[i][j]] = [laby[i][j], laby[i][j-1]]
             }
             afficheLaby()
@@ -54,8 +107,14 @@
 
         function droite(){
             [i, j] = findP()
-            if (laby[i][j+1]!=m){
+            if (laby[i][j+1]==f){
+                [laby[i][j+1], laby[i][j]] = [laby[i][j], b]
+                afficheLaby()
+                return
+            }else{
+                if (laby[i][j+1]==b){
                 [laby[i][j+1], laby[i][j]] = [laby[i][j], laby[i][j+1]]
+                }
             }
             afficheLaby()
         }     
@@ -116,14 +175,18 @@
  
         </div>
 
-    <!-- ajouter vos boutons de déplacement ici -->
-    <button onclick="haut()">haut</button>
-    <button onclick="bas()">bas</button>
-    <button onclick="gauche()">gauche</button>
-    <button onclick="droite()">droite</button>
- 
-</body>
-<script>
-    afficheLaby()
-</script>
+        <!-- ajouter vos boutons de déplacement ici -->
+        <div class="boutons">
+            <button class="haut" onclick="haut()">haut</button>
+            <button class="bas" onclick="bas()">bas</button>
+            <button class="gauche" onclick="gauche()">gauche</button>
+            <button class="droite" onclick="droite()">droite</button>
+            <button class="restart" onclick="restart()">restart</button>
+            <button class="automatique" onclick="automatique()">automatique</button>
+        </div>
+    
+    </body>
+    <script>
+        afficheLaby()
+    </script>
 </html>
