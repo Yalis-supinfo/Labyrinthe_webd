@@ -5,19 +5,27 @@
     <title>Labyrinthe</title>
     <style>
         body{
-            display: flex;
-            align-items: center;
-            flex-flow: column nowrap;
+            display: grid;
+            grid-template:  "a a b b" 50%
+                            "a a c c" 50%
         }
 
-        .boutons {
+        #laby{
+            grid-area: a;
+        }
+
+        tr{
+            border: red solid;
+        }
+
+        .boutons.deplacement {
             min-width: 250px;
+            height: 200px;
+            grid-area: c;
             display: grid;
-            grid-template:  "a a a a" 40px
-                            "b b c c" 40px
-                            "d d d d" 40px
-                            "e e e e" 40px
-                            "f f g g" 40px;
+            grid-template:  "a a a a" 65px
+                            "b b c c" 65px
+                            "d d d d" 65px;
         }
 
         .haut{grid-area: a;}
@@ -27,11 +35,17 @@
         .gauche{grid-area: b;}
         
         .droite{grid-area: c;}
-        
-        .restart {grid-area: f;}
 
-        .automatique{grid-area:g;}
+        .boutons.mode {
+            grid-area: b;
+            display: grid;
+            grid-template:  "a a b b" 40px;
+        }
         
+        .newGame{grid-area: a;}
+
+        .automatique{grid-area: b;}
+
         button {
             display: flex;
             justify-content: center;
@@ -56,7 +70,7 @@
                     [m,b,m,b,m,b,b,b,b,f],
                     [m,m,m,m,m,m,m,m,m,m]];
  
-        function restart(){
+        function newGame(){
             laby = [[m,m,m,m,m,m,m,m,m,m],
                     [m,p,m,b,b,b,b,b,b,m],
                     [m,b,m,b,m,m,m,b,m,m],
@@ -110,6 +124,12 @@
             if (laby[i][j+1]==f){
                 [laby[i][j+1], laby[i][j]] = [laby[i][j], b]
                 afficheLaby()
+                document.getElementById("laby").innerHTML += '<h1>Tu as gagné</h1>'
+                document.querySelector(".haut").setAttribute("disabled", "")
+                document.querySelector(".bas").setAttribute("disabled", "")
+                document.querySelector(".gauche").setAttribute("disabled", "")
+                document.querySelector(".droite").setAttribute("disabled", "")
+
                 return
             }else{
                 if (laby[i][j+1]==b){
@@ -167,7 +187,12 @@
             insertion+="</table>";
             leLaby.innerHTML=insertion;
         }
-         
+        document.addEventListener('keydown', (e) => {
+            if (e.key=='ArrowUp'){haut()}
+            if (e.key=='ArrowDown'){bas()}
+            if (e.key=='ArrowLeft'){gauche()}
+            if (e.key=='ArrowRight'){droite()}
+        })
     </script>
 </head>
     <body>
@@ -176,15 +201,16 @@
         </div>
 
         <!-- ajouter vos boutons de déplacement ici -->
-        <div class="boutons">
+        <div class="boutons deplacement">
             <button class="haut" onclick="haut()">haut</button>
             <button class="bas" onclick="bas()">bas</button>
             <button class="gauche" onclick="gauche()">gauche</button>
             <button class="droite" onclick="droite()">droite</button>
-            <button class="restart" onclick="restart()">restart</button>
+        </div>
+        <div class="boutons mode">
+            <button class="newGame" onclick="newGame()">newGame</button>
             <button class="automatique" onclick="automatique()">automatique</button>
         </div>
-    
     </body>
     <script>
         afficheLaby()
