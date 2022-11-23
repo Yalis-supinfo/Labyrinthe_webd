@@ -196,7 +196,7 @@
             insertion+="</table>";
             leLaby.innerHTML=insertion;
         }
-        
+
         document.addEventListener('keydown', (e) => {
             if (game){
                 if (e.key=='ArrowUp'){haut()}
@@ -205,6 +205,12 @@
                 if (e.key=='ArrowRight'){droite()}
             }
         })
+        setInterval(myTimer, 1000);
+
+        function myTimer() {
+            const d = new Date();
+            document.getElementById("timer").innerHTML = d.toLocaleTimeString();
+        }
     </script>
 </head>
     <body>
@@ -222,6 +228,7 @@
         <div class="boutons mode">
             <button class="newGame" onclick="newGame()">newGame</button>
             <button class="automatique" onclick="automatique()">automatique</button>
+            <p id="timer"></p>
         </div>
     </body>
     <script>
