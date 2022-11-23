@@ -174,54 +174,29 @@
             afficheLaby()
         }     
          
-        function afficheLaby() //ne rien modifier dans cette fonction
-        {
+        function afficheLaby(){
             var leLaby=document.getElementById("laby");
             insertion="<table border=0 cellspacing=0 cellpadding=0>";
          
-         
-            for(i=0;i<7;i++)
-            {
+            for(i=0;i<7;i++){
             insertion+="<tr>";
-                for(j=0;j<10;j++)
-                {
-                 
-                    if (laby[i][j]==m)
-                    {
+                const dico = {
+                    m : "<img width='52'height='52' src='Assets/stonewall.png'>",
+                    p : "<img width='52' height='52' style='background-image:Assets/Ground.png' src='Assets/Heros.png'>",
+                    b : "<img width='52' height='52' src='Assets/Ground.png'>",
+                    f : "<img width='52' height='52'src='Assets/Trophy.png'>"}
+                for(j=0;j<10;j++){
                     insertion+="<td>";
-                    insertion+="<img width='52'height='52' src='Assets/stonewall.png'>";
+                    insertion+=dico[laby[i][j]];
                     insertion+="</td>";
                     }
-                    if (laby[i][j]==p)
-                    {
-                    insertion+="<td>";
-                    insertion+="<img width='52' height='52' style='background-image:Assets/Ground.png' src='Assets/Heros.png'>";
-                    insertion+="</td>";
-                    }
-                    if (laby[i][j]==b)
-                    {
-                    insertion+="<td>";
-                    insertion+="<img width='52' height='52' src='Assets/Ground.png'>";
-                    insertion+="</td>";
-                    }
-
-                     
-                    if (laby[i][j]==f)
-                    {
-                    insertion+="<td>";
-                    insertion+="<img width='52' height='52'src='Assets/Trophy.png'>";
-                    insertion+="</td>";
-                    }
-                     
-             
-                     
-                }
                 insertion+="</tr>";
             }  
              
             insertion+="</table>";
             leLaby.innerHTML=insertion;
         }
+        
         document.addEventListener('keydown', (e) => {
             if (game){
                 if (e.key=='ArrowUp'){haut()}
