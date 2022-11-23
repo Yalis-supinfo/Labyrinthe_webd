@@ -19,9 +19,46 @@
                     [m,b,b,b,m,b,m,m,b,m],
                     [m,b,m,b,m,b,b,b,b,f],
                     [m,m,m,m,m,m,m,m,m,m]];
-     
-                  
-      
+ 
+        function findP(){
+            for (let i=0; i<laby.length; i++) {
+                if (laby[i].includes(p)) {
+                    return [i, laby[i].indexOf(p)]
+                }
+            }
+        }
+
+        function haut(){
+            [i, j] = findP()
+            if (laby[i-1][j]!=m){
+                [laby[i-1][j], laby[i][j]] = [laby[i][j], laby[i-1][j]]
+            }
+            afficheLaby()
+        }
+
+        function bas(){
+            [i, j] = findP()
+            if (laby[i+1][j]!=m){
+                [laby[i+1][j], laby[i][j]] = [laby[i][j], laby[i+1][j]]
+            }
+            afficheLaby()
+        }
+
+        function gauche(){
+            [i, j] = findP()
+            if (laby[i][j-1]!=m){
+                [laby[i][j-1], laby[i][j]] = [laby[i][j], laby[i][j-1]]
+            }
+            afficheLaby()
+        }
+
+        function droite(){
+            [i, j] = findP()
+            if (laby[i][j+1]!=m){
+                [laby[i][j+1], laby[i][j]] = [laby[i][j], laby[i][j+1]]
+            }
+            afficheLaby()
+        }     
          
         function afficheLaby() //ne rien modifier dans cette fonction
         {
@@ -79,8 +116,6 @@
  
         </div>
 
-    <input type="button" value="GO" onclick="afficheLaby();"><br/><BR><BR>
-
     <!-- ajouter vos boutons de déplacement ici -->
     <button onclick="haut()">haut</button>
     <button onclick="bas()">bas</button>
@@ -88,5 +123,7 @@
     <button onclick="droite()">droite</button>
  
 </body>
-<script src="app.js"></script>
+<script>
+    afficheLaby()
+</script>
 </html>
