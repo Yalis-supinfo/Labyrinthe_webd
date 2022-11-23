@@ -6,8 +6,9 @@
     <style>
         body{
             display: grid;
-            grid-template:  "a a b b" 50%
-                            "a a c c" 50%
+            justify-content: space-evenly;
+            grid-template:  "a b" 50%
+                            "a c" 50%
         }
 
         #laby{
@@ -62,22 +63,37 @@
         xperso=1; //position initial du personnage sur l'axe X
         yperso=1; //postition initial du personnage sur l'axe Y
         //tableau à double entrée représentant votre labyrinthe, vous pouvez le modifier pour comprendre le fonctionnement
-        var laby = [[m,m,m,m,m,m,m,m,m,m],
-                    [m,p,m,b,b,b,b,b,b,m],
-                    [m,b,m,b,m,m,m,b,m,m],
-                    [m,b,m,b,m,b,m,b,b,m],
-                    [m,b,b,b,m,b,m,m,b,m],
-                    [m,b,m,b,m,b,b,b,b,f],
-                    [m,m,m,m,m,m,m,m,m,m]];
+        var game = 1
+        var startlaby = [[m,m,m,m,m,m,m,m,m,m],
+                        [m,p,m,b,b,b,b,b,b,m],
+                        [m,b,m,b,m,m,m,b,m,m],
+                        [m,b,m,b,m,b,m,b,b,m],
+                        [m,b,b,b,m,b,m,m,b,m],
+                        [m,b,m,b,m,b,b,b,b,f],
+                        [m,m,m,m,m,m,m,m,m,m]];
+        
  
+        function deepCopy(obj) {
+            console.log('good')
+            if (Object.prototype.toString.call(obj) === '[object Array]') {
+                var len = obj.length, out = new Array(len), i = 0;
+                for ( ; i < len; i++ ) {
+                out[i] = arguments.callee(obj[i]);
+                }
+                return out;
+            }
+            return obj;
+        }
+
+        var laby = deepCopy(startlaby);
+
         function newGame(){
-            laby = [[m,m,m,m,m,m,m,m,m,m],
-                    [m,p,m,b,b,b,b,b,b,m],
-                    [m,b,m,b,m,m,m,b,m,m],
-                    [m,b,m,b,m,b,m,b,b,m],
-                    [m,b,b,b,m,b,m,m,b,m],
-                    [m,b,m,b,m,b,b,b,b,f],
-                    [m,m,m,m,m,m,m,m,m,m]];
+            laby = deepCopy(startlaby);
+            game = 1;
+            document.querySelector(".haut").removeAttribute("disabled")
+            document.querySelector(".bas").removeAttribute("disabled")
+            document.querySelector(".gauche").removeAttribute("disabled")
+            document.querySelector(".droite").removeAttribute("disabled")
             afficheLaby()
         }
 
@@ -89,11 +105,21 @@
             }
         }
 
+        function setdisabled(){
+            game = 0
+            document.getElementById("laby").innerHTML += '<h1>Tu as gagné</h1>'
+            document.querySelector(".haut").setAttribute("disabled", "")
+            document.querySelector(".bas").setAttribute("disabled", "")
+            document.querySelector(".gauche").setAttribute("disabled", "")
+            document.querySelector(".droite").setAttribute("disabled", "")
+        }
+
         function haut(){
             [i, j] = findP()
             if (laby[i-1][j]==f){
                 [laby[i-1][j], laby[i][j]] = [laby[i][j], b]
                 afficheLaby()
+                setdisabled()
                 return
             }else{
                 if (laby[i-1][j]==b){
@@ -105,16 +131,30 @@
 
         function bas(){
             [i, j] = findP()
-            if (laby[i+1][j]==b){
+            if (laby[i+1][j]==f){
+                [laby[i+1][j], laby[i][j]] = [laby[i][j], b]
+                afficheLaby()
+                setdisabled()
+                return
+            }else{
+                if (laby[i+1][j]==b){
                 [laby[i+1][j], laby[i][j]] = [laby[i][j], laby[i+1][j]]
+                }
             }
             afficheLaby()
         }
 
         function gauche(){
             [i, j] = findP()
-            if (laby[i][j-1]==b){
+            if (laby[i][j-1]==f){
+                [laby[i][j-1], laby[i][j]] = [laby[i][j], b]
+                afficheLaby()
+                setdisabled()
+                return
+            }else{
+                if (laby[i][j-1]==b){
                 [laby[i][j-1], laby[i][j]] = [laby[i][j], laby[i][j-1]]
+                }
             }
             afficheLaby()
         }
@@ -124,12 +164,7 @@
             if (laby[i][j+1]==f){
                 [laby[i][j+1], laby[i][j]] = [laby[i][j], b]
                 afficheLaby()
-                document.getElementById("laby").innerHTML += '<h1>Tu as gagné</h1>'
-                document.querySelector(".haut").setAttribute("disabled", "")
-                document.querySelector(".bas").setAttribute("disabled", "")
-                document.querySelector(".gauche").setAttribute("disabled", "")
-                document.querySelector(".droite").setAttribute("disabled", "")
-
+                setdisabled()
                 return
             }else{
                 if (laby[i][j+1]==b){
@@ -188,10 +223,12 @@
             leLaby.innerHTML=insertion;
         }
         document.addEventListener('keydown', (e) => {
-            if (e.key=='ArrowUp'){haut()}
-            if (e.key=='ArrowDown'){bas()}
-            if (e.key=='ArrowLeft'){gauche()}
-            if (e.key=='ArrowRight'){droite()}
+            if (game){
+                if (e.key=='ArrowUp'){haut()}
+                if (e.key=='ArrowDown'){bas()}
+                if (e.key=='ArrowLeft'){gauche()}
+                if (e.key=='ArrowRight'){droite()}
+            }
         })
     </script>
 </head>
