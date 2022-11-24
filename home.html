@@ -283,6 +283,6 @@
     <script>
         afficheLaby()
         setclick()
-        document.querySelector("#laby").addEventListener('click', function(){timer_active=true;})
+        document.querySelector("#laby").addEventListener('click', function(){if (game){timer_active=true;}})
     </script>
 </html>
