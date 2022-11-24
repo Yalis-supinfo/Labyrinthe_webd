@@ -40,12 +40,23 @@
         .boutons.mode {
             grid-area: b;
             display: grid;
-            grid-template:  "a a b b" 40px;
+            grid-template:  "a a b b" 40px
+                            "c c c c" 40px;
         }
         
         .newGame{grid-area: a;}
 
         .automatique{grid-area: b;}
+
+        #timer{
+            grid-area: c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #aaa;
+            background-color: #ddd;
+            height: 30px;
+        }
 
         button {
             display: flex;
@@ -63,7 +74,7 @@
         xperso=1; //position initial du personnage sur l'axe X
         yperso=1; //postition initial du personnage sur l'axe Y
         //tableau à double entrée représentant votre labyrinthe, vous pouvez le modifier pour comprendre le fonctionnement
-        var game = 1
+        var game = true
         var startlaby = [[m,m,m,m,m,m,m,m,m,m],
                         [m,p,m,b,b,b,b,b,b,m],
                         [m,b,m,b,m,m,m,b,m,m],
@@ -74,7 +85,6 @@
         
  
         function deepCopy(obj) {
-            console.log('good')
             if (Object.prototype.toString.call(obj) === '[object Array]') {
                 var len = obj.length, out = new Array(len), i = 0;
                 for ( ; i < len; i++ ) {
@@ -88,8 +98,10 @@
         var laby = deepCopy(startlaby);
 
         function newGame(){
+            timer = setInterval(myTimer, 10);
+            time = 0
             laby = deepCopy(startlaby);
-            game = 1;
+            game = true;
             document.querySelector(".haut").removeAttribute("disabled")
             document.querySelector(".bas").removeAttribute("disabled")
             document.querySelector(".gauche").removeAttribute("disabled")
@@ -106,8 +118,10 @@
         }
 
         function setdisabled(){
-            game = 0
-            document.getElementById("laby").innerHTML += '<h1>Tu as gagné</h1>'
+            clearInterval(timer)
+            game = false;
+            timer_active = false;
+            document.getElementById("laby").innerHTML += `<h1>Tu as gagné en ${Math.floor(time/100)}'${(time%100 < 10)? '0'+time%100: time%100}</h1>`
             document.querySelector(".haut").setAttribute("disabled", "")
             document.querySelector(".bas").setAttribute("disabled", "")
             document.querySelector(".gauche").setAttribute("disabled", "")
@@ -199,18 +213,21 @@
 
         document.addEventListener('keydown', (e) => {
             if (game){
+                timer_active=true;
                 if (e.key=='ArrowUp'){haut()}
                 if (e.key=='ArrowDown'){bas()}
                 if (e.key=='ArrowLeft'){gauche()}
                 if (e.key=='ArrowRight'){droite()}
             }
         })
-        setInterval(myTimer, 1000);
-
+        var timer = setInterval(myTimer, 10)
+        let time = 0
         function myTimer() {
-            const d = new Date();
-            document.getElementById("timer").innerHTML = d.toLocaleTimeString();
+            if (timer_active){time++}
+            if (time%100 < 10){time = `0${time}` }
+            document.getElementById("timer").innerHTML = `${Math.floor(time/100)}:${(time%100 < 10)? '0'+time%100: time%100}`
         }
+
     </script>
 </head>
     <body>
@@ -228,10 +245,13 @@
         <div class="boutons mode">
             <button class="newGame" onclick="newGame()">newGame</button>
             <button class="automatique" onclick="automatique()">automatique</button>
-            <p id="timer"></p>
+            <p id="timer">0:00</p>
         </div>
     </body>
     <script>
         afficheLaby()
+        for (img of document.querySelectorAll('img')){
+            img.addEventListener('click', function(){})
+        }
     </script>
 </html>
