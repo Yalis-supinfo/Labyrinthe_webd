@@ -100,6 +100,7 @@
         function newGame(){
             timer = setInterval(myTimer, 10);
             time = 0
+            timer_active = false;
             laby = deepCopy(startlaby);
             game = true;
             document.querySelector(".haut").removeAttribute("disabled")
@@ -107,6 +108,7 @@
             document.querySelector(".gauche").removeAttribute("disabled")
             document.querySelector(".droite").removeAttribute("disabled")
             afficheLaby()
+            setclick()
         }
 
         function findP(){
@@ -141,6 +143,7 @@
                 }
             }
             afficheLaby()
+            setclick()
         }
 
         function bas(){
@@ -156,6 +159,7 @@
                 }
             }
             afficheLaby()
+            setclick()
         }
 
         function gauche(){
@@ -171,6 +175,7 @@
                 }
             }
             afficheLaby()
+            setclick()
         }
 
         function droite(){
@@ -186,6 +191,7 @@
                 }
             }
             afficheLaby()
+            setclick()
         }     
          
         function afficheLaby(){
@@ -194,12 +200,13 @@
          
             for(i=0;i<7;i++){
             insertion+="<tr>";
-                const dico = {
-                    m : "<img width='52'height='52' src='Assets/stonewall.png'>",
-                    p : "<img width='52' height='52' style='background-image:Assets/Ground.png' src='Assets/Heros.png'>",
-                    b : "<img width='52' height='52' src='Assets/Ground.png'>",
-                    f : "<img width='52' height='52'src='Assets/Trophy.png'>"}
+                let dico
                 for(j=0;j<10;j++){
+                    dico = {
+                    m : `<img class='${i}${j}' width='52'height='52' src='Assets/stonewall.png'>`,
+                    p : `<img class='${i}${j}' width='52' height='52' style='background-image:Assets/Ground.png' src='Assets/Heros.png'>`,
+                    b : `<img class='${i}${j}' width='52' height='52' src='Assets/Ground.png'>`,
+                    f : `<img class='${i}${j}' width='52' height='52'src='Assets/Trophy.png'>`}
                     insertion+="<td>";
                     insertion+=dico[laby[i][j]];
                     insertion+="</td>";
@@ -220,12 +227,37 @@
                 if (e.key=='ArrowRight'){droite()}
             }
         })
+
+
+        var timer_active=false;
         var timer = setInterval(myTimer, 10)
         let time = 0
         function myTimer() {
             if (timer_active){time++}
             if (time%100 < 10){time = `0${time}` }
             document.getElementById("timer").innerHTML = `${Math.floor(time/100)}:${(time%100 < 10)? '0'+time%100: time%100}`
+        }
+        function setclick(){
+            for (img of document.querySelectorAll('img')){
+                img.addEventListener('click', function(){
+                    [i, j] = [Number(this.className[0]), Number(this.className[1])];
+                    console.log([i, j]);
+                    if (laby[i][j]==b || laby[i][j]== f){
+                        console.log(findP());
+                        [x, y] = findP()
+                        if (x == i-1 && y == j){
+                            bas()
+                        }else if(x == i+1 && y == j){
+                            haut()
+                        }else if(x == i && y == j-1){
+                            droite()
+                        }else if(x == i && y == j+1){
+                            gauche()
+                        }
+                        
+                    }
+                })
+            }
         }
 
     </script>
@@ -250,8 +282,7 @@
     </body>
     <script>
         afficheLaby()
-        for (img of document.querySelectorAll('img')){
-            img.addEventListener('click', function(){})
-        }
+        setclick()
+        document.querySelector("#laby").addEventListener('click', function(){timer_active=true;})
     </script>
 </html>
