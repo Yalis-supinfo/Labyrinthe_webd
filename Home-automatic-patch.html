@@ -1,0 +1,265 @@
+<!doctype html> 
+
+<html>
+<head>
+    <title>Labyrinthe</title>
+    <style>
+        body{
+            display: grid;
+            justify-content: center;
+            grid-template:  "a b" 50%
+                            "a c" 50%
+        }
+
+        #laby{
+            grid-area: a;
+        }
+
+        tr{
+            border: red solid;
+        }
+
+        .boutons.deplacement {
+            min-width: 250px;
+            height: 200px;
+            grid-area: c;
+            display: grid;
+            grid-template:  "a a a a" 65px
+                            "b b c c" 65px
+                            "d d d d" 65px;
+        }
+
+        .haut{grid-area: a;}
+        
+        .bas{grid-area: d;}
+        
+        .gauche{grid-area: b;}
+        
+        .droite{grid-area: c;}
+
+        .boutons.mode {
+            grid-area: b;
+            display: grid;
+            grid-template:  "a a b b" 40px;
+        }
+        
+        .newGame{grid-area: a;}
+
+        .automatique{grid-area: b;}
+
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+    </style>
+    <script language="JavaScript">
+        m='m'; //représente un mur
+        p='p'; //représente le personnage
+        b='b'; //représente le chemin
+        f="f"; //représente le trophée 
+
+        xperso=1; //position initial du personnage sur l'axe X
+        yperso=1; //postition initial du personnage sur l'axe Y
+        //tableau à double entrée représentant votre labyrinthe, vous pouvez le modifier pour comprendre le fonctionnement
+        var game = 1
+        var startlaby = [[m,m,m,m,m,m,m,m,m,m],
+                        [m,p,m,b,b,b,b,b,b,m],
+                        [m,b,m,b,m,m,m,b,m,m],
+                        [m,b,m,b,m,b,m,b,b,m],
+                        [m,b,b,b,m,b,m,m,b,m],
+                        [m,b,m,b,m,b,b,b,b,f],
+                        [m,m,m,m,m,m,m,m,m,m]];
+        
+ 
+        function deepCopy(obj) {
+            console.log('good')
+            if (Object.prototype.toString.call(obj) === '[object Array]') {
+                var len = obj.length, out = new Array(len), i = 0;
+                for ( ; i < len; i++ ) {
+                out[i] = arguments.callee(obj[i]);
+                }
+                return out;
+            }
+            return obj;
+        }
+
+        var laby = deepCopy(startlaby);
+
+        function newGame(){
+            laby = deepCopy(startlaby);
+            game = 1;
+            document.querySelector(".haut").removeAttribute("disabled")
+            document.querySelector(".bas").removeAttribute("disabled")
+            document.querySelector(".gauche").removeAttribute("disabled")
+            document.querySelector(".droite").removeAttribute("disabled")
+            afficheLaby()
+        }
+
+        function findP(){
+            for (let i=0; i<laby.length; i++) {
+                if (laby[i].includes(p)) {
+                    return [i, laby[i].indexOf(p)]
+                }
+            }
+        }
+
+        function setdisabled(){
+            game = 0
+            document.getElementById("laby").innerHTML += '<h1>Tu as gagné</h1>'
+            document.querySelector(".haut").setAttribute("disabled", "")
+            document.querySelector(".bas").setAttribute("disabled", "")
+            document.querySelector(".gauche").setAttribute("disabled", "")
+            document.querySelector(".droite").setAttribute("disabled", "")
+        }
+
+        function haut(){
+            [i, j] = findP()
+            if (laby[i-1][j]==f){
+                [laby[i-1][j], laby[i][j]] = [laby[i][j], b]
+                afficheLaby()
+                setdisabled()
+                return
+            }else{
+                if (laby[i-1][j]==b){
+                [laby[i-1][j], laby[i][j]] = [laby[i][j], laby[i-1][j]]
+                }
+            }
+            afficheLaby()
+        }
+
+        function bas(){
+            [i, j] = findP()
+            if (laby[i+1][j]==f){
+                [laby[i+1][j], laby[i][j]] = [laby[i][j], b]
+                afficheLaby()
+                setdisabled()
+                return
+            }else{
+                if (laby[i+1][j]==b){
+                [laby[i+1][j], laby[i][j]] = [laby[i][j], laby[i+1][j]]
+                }
+            }
+            afficheLaby()
+        }
+
+        function gauche(){
+            [i, j] = findP()
+            if (laby[i][j-1]==f){
+                [laby[i][j-1], laby[i][j]] = [laby[i][j], b]
+                afficheLaby()
+                setdisabled()
+                return
+            }else{
+                if (laby[i][j-1]==b){
+                [laby[i][j-1], laby[i][j]] = [laby[i][j], laby[i][j-1]]
+                }
+            }
+            afficheLaby()
+        }
+
+        function droite(){
+            [i, j] = findP()
+            if (laby[i][j+1]==f){
+                [laby[i][j+1], laby[i][j]] = [laby[i][j], b]
+                afficheLaby()
+                setdisabled()
+                return
+            }else{
+                if (laby[i][j+1]==b){
+                [laby[i][j+1], laby[i][j]] = [laby[i][j], laby[i][j+1]]
+                }
+            }
+            afficheLaby()
+        }     
+         
+        function afficheLaby(){
+            var leLaby=document.getElementById("laby");
+            insertion="<table border=0 cellspacing=0 cellpadding=0>";
+         
+            for(i=0;i<7;i++){
+            insertion+="<tr>";
+                const dico = {
+                    m : "<img width='52'height='52' src='Assets/stonewall.png'>",
+                    p : "<img width='52' height='52' style='background-image:Assets/Ground.png' src='Assets/Heros.png'>",
+                    b : "<img width='52' height='52' src='Assets/Ground.png'>",
+                    f : "<img width='52' height='52'src='Assets/Trophy.png'>"}
+                for(j=0;j<10;j++){
+                    insertion+="<td>";
+                    insertion+=dico[laby[i][j]];
+                    insertion+="</td>";
+                    }
+                insertion+="</tr>";
+            }  
+             
+            insertion+="</table>";
+            leLaby.innerHTML=insertion;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (game){
+                if (e.key=='ArrowUp'){haut()}
+                if (e.key=='ArrowDown'){bas()}
+                if (e.key=='ArrowLeft'){gauche()}
+                if (e.key=='ArrowRight'){droite()}
+            }
+        })
+        setInterval(myTimer, 1000);
+
+        function myTimer() {
+            const d = new Date();
+            document.getElementById("timer").innerHTML = d.toLocaleTimeString();
+        }
+       
+        function RandomRun() {
+            return Math.floor(Math.random()*4)
+            if (Math.floor==0)
+            {haut()}
+            else{if (Math.floor==1)
+            {bas()}
+            else{if (Math.floor==2)
+            {gauche()}
+            else
+            {droite()}}}}
+             
+           
+        
+        function automatique () {
+            [i, j] = findP()
+            if (laby [i,j-1]== m && laby [i,j+1]== m && laby [i-1,j]== m)
+            {bas();laby [i+1,j]=m;}
+            else {if (laby [i,j-1]== m && laby [i, j+1]== m && laby [i+1,j]== m)
+            {haut();laby [i-1,j]=m;}
+            else {if (laby [i,j-1]== m && laby [i+1,j]== m && laby [i-1,j]== m)
+            {droite();laby [i,j+1]=m;}
+            else{if (laby [i,j+1]== m && laby [i+1,j]== m && laby [i-1,j]== m)
+            {gauche();laby [i,j-1]=m;}
+            else
+            {RandomRun()}}}}}
+                
+            
+    </script>
+</head>
+    <body>
+        <div id="laby">
+ 
+        </div>
+
+        <!-- ajouter vos boutons de déplacement ici -->
+        <div class="boutons deplacement">
+            <button class="haut" onclick="haut()">haut</button>
+            <button class="bas" onclick="bas()">bas</button>
+            <button class="gauche" onclick="gauche()">gauche</button>
+            <button class="droite" onclick="droite()">droite</button>
+        </div>
+        <div class="boutons mode">
+            <button class="newGame" onclick="newGame()">newGame</button>
+            <button class="automatique" onclick="automatique()">automatique</button>
+            <p id="timer"></p>
+        </div>
+    </body>
+    <script>
+        afficheLaby()
+    </script>
+</html>
