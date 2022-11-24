@@ -201,17 +201,22 @@
            
         
         function automatique () {
+            NewGame()
             [i, j] = findP()
-            if (laby [i,j-1]== m && laby [i,j+1]== m && laby [i-1,j]== m)
-            {bas();laby [i+1,j]=m;}
-            else {if (laby [i,j-1]== m && laby [i, j+1]== m && laby [i+1,j]== m)
-            {haut();laby [i-1,j]=m;}
-            else {if (laby [i,j-1]== m && laby [i+1,j]== m && laby [i-1,j]== m)
-            {droite();laby [i,j+1]=m;}
-            else{if (laby [i,j+1]== m && laby [i+1,j]== m && laby [i-1,j]== m)
-            {gauche();laby [i,j-1]=m;}
-            else
-            {RandomRun()}}}}}
+            while (game){
+                if (laby [i,j-1]== m && laby [i,j+1]== m && laby [i-1,j]== m){
+                    bas();
+                }else if (laby [i,j-1]== m && laby [i, j+1]== m && laby [i+1,j]== m){
+                    haut();}
+                else if (laby [i,j-1]== m && laby [i+1,j]== m && laby [i-1,j]== m){
+                    droite();}
+                else if (laby [i,j+1]== m && laby [i+1,j]== m && laby [i-1,j]== m){
+                    gauche();}
+                else{
+                    RandomRun();
+                }
+            }
+        }
          
         function afficheLaby(){
             var leLaby=document.getElementById("laby");
