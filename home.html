@@ -264,14 +264,81 @@
         }
 
         function automatique(){
+            timer_active=true;
             [i, j] = findP();
             auto_laby = deepCopy(startlaby)
             auto = setInterval(function(){
                 if (game){
+                    console.log(nb_sortie())
+                    f_coter()
+                    if (nb_sortie()==1){
+                        if (laby[i][j-1]== m && laby[i][j+1]== m && laby[i-1][j]== m){
+                            [laby[i+1][j], laby[i][j]] = [laby[i][j], m]
+                            afficheLaby()
+                        }else if (laby[i][j-1]== m && laby[i][ j+1]== m && laby[i+1][j]== m){
+                            [laby[i-1][j], laby[i][j]] = [laby[i][j], m]
+                            afficheLaby()
+                        }else if (laby[i][j-1]== m && laby[i+1][j]== m && laby[i-1][j]== m){
+                            [laby[i][j+1], laby[i][j]] = [laby[i][j], m]
+                            afficheLaby()
+                        }else if (laby[i][j+1]== m && laby[i+1][j]== m && laby[i-1][j]== m){
+                            [laby[i][j-1], laby[i][j]] = [laby[i][j], m]
+                            afficheLaby()
+                        }
+                    }else {
+                        sortie_dispo()[Math.floor(Math.random() * nb_sortie())]();
+                    }
                 }else{
                     clearInterval(auto)
                 }
-            }, 50)
+            }, 1)
+        }
+
+        function sortie_dispo(){
+            [i, j] = findP();
+            liste = [];
+            if (laby[i][j+1]==b){
+                liste.push(droite)
+            }
+            if (laby[i][j-1]==b){
+                liste.push(gauche)
+            }
+            if (laby[i-1][j]==b){
+                liste.push(haut)
+            }
+            if (laby[i+1][j]==b){
+                liste.push(bas)
+            }return liste
+        }
+
+        function f_coter(){
+            [i, j] = findP();
+            if (laby[i][j-1]==f){
+                gauche()
+            }else if (laby[i][j+1]==f){
+                droite()
+            }else if (laby[i-1][j]==f){
+                haut()
+            }else if (laby[i+1][j]==f){
+                bas()
+            }
+        }
+
+        function nb_sortie(){
+            [i, j] = findP();
+            let t = 0;
+            if (laby[i][j+1]==b){
+                t++
+            }
+            if (laby[i][j-1]==b){
+                t++
+            }
+            if (laby[i-1][j]==b){
+                t++
+            }
+            if (laby[i+1][j]==b){
+                t++
+            }return t
         }
 
     </script>
