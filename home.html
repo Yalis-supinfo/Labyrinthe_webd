@@ -186,7 +186,32 @@
                 }
             }
             afficheLaby()
-        }     
+        } 
+                function RandomRun() {
+            return Math.floor(Math.random()*4)
+            if (Math.floor==0)
+            {haut()}
+            else{if (Math.floor==1)
+            {bas()}
+            else{if (Math.floor==2)
+            {gauche()}
+            else
+            {droite()}}}}
+             
+           
+        
+        function automatique () {
+            [i, j] = findP()
+            if (laby [i,j-1]== m && laby [i,j+1]== m && laby [i-1,j]== m)
+            {bas();laby [i+1,j]=m;}
+            else {if (laby [i,j-1]== m && laby [i, j+1]== m && laby [i+1,j]== m)
+            {haut();laby [i-1,j]=m;}
+            else {if (laby [i,j-1]== m && laby [i+1,j]== m && laby [i-1,j]== m)
+            {droite();laby [i,j+1]=m;}
+            else{if (laby [i,j+1]== m && laby [i+1,j]== m && laby [i-1,j]== m)
+            {gauche();laby [i,j-1]=m;}
+            else
+            {RandomRun()}}}}}
          
         function afficheLaby(){
             var leLaby=document.getElementById("laby");
