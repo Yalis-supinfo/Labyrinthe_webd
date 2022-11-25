@@ -286,12 +286,13 @@
                             afficheLaby()
                         }
                     }else {
-                        sortie_dispo()[Math.floor(Math.random() * nb_sortie())]();
+                        let nb = Math.floor(Math.random() * nb_sortie())
+                        sortie_dispo()[nb]();
                     }
                 }else{
                     clearInterval(auto)
                 }
-            }, 1)
+            }, 0)
         }
 
         function sortie_dispo(){
