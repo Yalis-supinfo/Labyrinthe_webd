@@ -101,6 +101,7 @@
         var laby = deepCopy(startlaby);
 
         function newGame(){
+            clearInterval(timer)
             timer = setInterval(myTimer, 10);
             time = 0
             timer_active = false;
@@ -201,7 +202,7 @@
             var leLaby=document.getElementById("laby");
             insertion="<table border=0 cellspacing=0 cellpadding=0>";
          
-            for(i=0;i<7;i++){
+            for(i=0;i<laby.length;i++){
             insertion+="<tr>";
                 let dico
                 for(j=0;j<10;j++){
@@ -233,6 +234,7 @@
 
 
         var timer_active=false;
+        clearInterval(timer)
         var timer = setInterval(myTimer, 10)
         let time = 0
         function myTimer() {
